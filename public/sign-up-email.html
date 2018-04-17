@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"></meta>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+    <title>Casual Sign Up</title>
+  </head>
+  <body>
+    <!-- For Email Register -->
+    <form method="post" onSubmit="return saveData();">
+      <h2>Sign Up</h2>
+      User name:<br />
+      <input id="username" type="text"></input><br />
+      E-mail:<br />
+      <input id="email" type="email"></input><br />
+      Password:<br />
+      <input id="password" type="password"></input><br />
+      Confirm password:<br />
+      <input id="password2" type="password"></input><br />
+      <button type="submit" id="registerSmtBtn">Register</button><br />
+      <p id="regMessage"></p>
+    </form>
+
+    <!-- Include -->
+    <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase-database.js"></script>
+
+    <!-- Initialize Firebase -->
+    <script>
+      var config = {
+        apiKey: "AIzaSyBQu2081RMKMMIT5sNpiqb5Gdo9ckblNDM",
+        authDomain: "casualweb-8f1e1.firebaseapp.com",
+        databaseURL: "https://casualweb-8f1e1.firebaseio.com",
+        projectId: "casualweb-8f1e1",
+        storageBucket: "casualweb-8f1e1.appspot.com",
+        messagingSenderId: "820689458865"
+      };
+      firebase.initializeApp(config);
+    </script>
+
+    <!-- Register by email -->
+    <script>
+      // Get Variable
+      var username = document.getElementById("username");
+      var email = document.getElementById("email");
+      var password = document.getElementById("password");
+      var password2 = document.getElementById("password2");
+      // Register Button Click
+      registerSmtBtn.addEventListener("click", function() {
+        document.getElementById("regMessage").innerHTML = "";
+        if(password.value === password2.value) {
+          // Register
+          firebase.auth().createUserWithEmailAndPassword(email.value, password.value)
+          .catch(function(error) {
+            var errCode = error.code;
+            var errMsg = error.message;
+            console.log("ERROR(" + errCode +"): " + errMsg);
+            // FIXME
+            document.getElementById("regMessage").innerHTML = errMsg;
+            localStorage.setItem("regMessage", errMsg);
+          });
+          // Sign In
+          firebase.auth().signInWithEmailAndPassword(email.value, password.value)
+          .catch(function(error) {
+            var errCode = error.code;
+            var errMsg = error.message;
+            console.log("ERROR(" + errCode +"): " + errMsg);
+            // FIXME
+            document.getElementById("regMessage").innerHTML = errMsg;
+            localStorage.setItem("regMessage", errMsg);
+          });
+          // FIXME
+          window.location.replace("http://localhost:5000/user.html");
+        }
+        else {
+          // FIXME
+          document.getElementById("regMessage").innerHTML = "Password doesn't match!";
+          //location.reload();
+        }
+      }, false);
+    </script>
+
+    <!-- Save Data -->
+    <script>
+      function saveData() {
+        localStorage.setItem("username", username.value);
+        localStorage.setItem("email", email.value);
+        localStorage.setItem("password", password.value);
+        localStorage.setItem("password2", password2.value);
+        return false;
+      }
+    </script>
+
+    <!-- Recovery Data -->
+    <script>
+      // FIXME
+      document.getElementById("username").value = localStorage.getItem("username");
+      document.getElementById("email").value = localStorage.getItem("email");
+      document.getElementById("password").value = localStorage.getItem("password");
+      document.getElementById("password2").value = localStorage.getItem("password2");
+      document.getElementById("regMessage").innerHTML = localStorage.getItem("regMessage");
+      console.log(localStorage.getItem("username"));
+      console.log(localStorage.getItem("email"));
+      console.log(localStorage.getItem("password"));
+      console.log(localStorage.getItem("password2"));
+    </script>
+  </body>
+</html>
